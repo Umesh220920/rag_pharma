@@ -1,0 +1,84 @@
+:root {
+  font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  color: #1c2822;
+  background: #f6f8f6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input { font: inherit; }
+button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid #9dbba8; outline-offset: 3px; }
+
+.page { min-height: 100vh; display: flex; flex-direction: column; }
+.topbar { height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 7.5%; border-bottom: 1px solid #e8ede8; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: #21382b; font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif; font-size: 17px; font-weight: 800; text-decoration: none; letter-spacing: -0.5px; }
+.brand-mark { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; color: white; background: #315d43; font-size: 23px; font-weight: 500; line-height: 1; }
+.brand-light { color: #83998a; font-weight: 500; }
+.topbar-note { display: flex; align-items: center; gap: 8px; color: #6d7e72; font-size: 12px; }
+.status-dot { width: 7px; height: 7px; display: inline-block; border-radius: 50%; background: #68a878; }
+.workspace { width: min(100% - 40px, 760px); margin: 0 auto; padding: 66px 0 48px; flex: 1; }
+.intro { margin-bottom: 32px; }
+.eyebrow { display: flex; align-items: center; gap: 8px; color: #698273; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; }
+.eyebrow span { width: 16px; height: 1px; background: #86a18e; }
+h1 { margin: 16px 0 12px; font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif; font-size: clamp(38px, 6vw, 54px); font-weight: 600; letter-spacing: -2.5px; line-height: 1.12; }
+h1 em { color: #66836f; font-style: normal; }
+.intro > p { max-width: 420px; margin: 0; color: #78847c; font-size: 14px; line-height: 1.7; }
+.chat-card { overflow: hidden; border: 1px solid #e3e9e3; border-radius: 14px; background: white; box-shadow: 0 12px 40px #2c493414; }
+.chat-heading { min-height: 70px; display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid #edf0ed; }
+.chat-icon { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; color: #315d43; background: #edf4ee; font-size: 20px; }
+.chat-heading > div:nth-child(2) { display: flex; flex-direction: column; gap: 3px; }
+.chat-heading strong { color: #28382f; font-size: 13px; font-weight: 600; }
+.chat-heading > div span { color: #919b94; font-size: 11px; }
+.online-label { margin-left: auto; display: flex; align-items: center; gap: 6px; color: #75917c; font-size: 9px; font-weight: 700; letter-spacing: 1px; }
+.conversation { min-height: 320px; max-height: 520px; overflow-y: auto; }
+.welcome { padding: 48px 24px 36px; text-align: center; }
+.welcome-symbol { width: 42px; height: 42px; display: grid; place-items: center; margin: 0 auto 15px; border: 1px solid #e5ede6; border-radius: 13px; color: #5b7f65; background: #f7faf7; font-size: 24px; }
+.welcome h2 { margin: 0 0 7px; font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif; font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+.welcome > p { margin: 0; color: #8a948d; font-size: 12px; }
+.suggestions { max-width: 440px; display: grid; gap: 8px; margin: 25px auto 0; text-align: left; }
+.suggestion { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 13px; border: 1px solid #e9eee9; border-radius: 8px; color: #58675d; background: white; cursor: pointer; font-size: 12px; transition: border-color .15s, background .15s; }
+.suggestion:hover:not(:disabled) { border-color: #b8cdbb; background: #fafcf9; }
+.suggestion span { color: #91a495; }
+.messages { display: grid; gap: 20px; padding: 24px; }
+.message { max-width: 90%; }
+.message.user { justify-self: end; }
+.message-label { display: block; margin-bottom: 7px; color: #87958a; font-size: 9px; font-weight: 700; letter-spacing: 1px; }
+.message p { margin: 0; color: #47574d; font-size: 13px; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+.message.user p { padding: 11px 14px; border-radius: 10px 10px 2px 10px; color: #fff; background: #355d43; }
+.message.assistant p { padding: 12px 14px; border: 1px solid #edf0ed; border-radius: 2px 10px 10px 10px; background: #fafbfa; }
+.message .error-text { border-color: #f0d7d2; color: #964a3f; background: #fff9f7; }
+.sources { margin: 9px 0 0; color: #718276; font-size: 11px; }
+.sources summary { width: fit-content; cursor: pointer; }
+.sources ul { display: grid; gap: 7px; padding-left: 18px; color: #7b867e; line-height: 1.5; }
+.sources li { padding-left: 2px; }
+.loading-message p { display: flex; align-items: center; gap: 9px; color: #839087; font-size: 12px; }
+.loader { width: 13px; height: 13px; border: 2px solid #dfe9e0; border-top-color: #5a8263; border-radius: 50%; animation: spin .75s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.composer { display: flex; align-items: center; gap: 10px; margin: 0 18px; padding: 9px 9px 9px 14px; border: 1px solid #e3e9e3; border-radius: 10px; background: #fff; }
+.composer:focus-within { border-color: #9eb7a2; box-shadow: 0 0 0 3px #dce9dd70; }
+.composer input { width: 100%; min-width: 0; border: 0; outline: 0; color: #34443a; background: transparent; font-size: 12px; }
+.composer input::placeholder { color: #a0aaa2; }
+.composer button { width: 33px; height: 33px; flex: 0 0 auto; border: 0; border-radius: 7px; color: white; background: #355d43; cursor: pointer; font-size: 21px; line-height: 1; }
+.composer button:disabled { background: #cbd6cd; cursor: not-allowed; }
+.disclaimer { margin: 12px 16px 15px; color: #a0a9a2; font-size: 10px; text-align: center; }
+footer { display: flex; justify-content: space-between; padding: 19px 7.5%; border-top: 1px solid #e8ede8; color: #a2aaa4; font-size: 9px; font-weight: 600; letter-spacing: 1px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+
+@media (max-width: 560px) {
+  .topbar { height: 62px; padding: 0 20px; }
+  .workspace { width: min(100% - 28px, 760px); padding-top: 44px; }
+  .chat-heading { padding: 12px 14px; }
+  .online-label { font-size: 8px; }
+  .conversation { min-height: 300px; }
+  .welcome { padding: 40px 16px 28px; }
+  .messages { padding: 18px 14px; }
+  .message { max-width: 96%; }
+  .composer { margin: 0 12px; }
+  footer { padding: 16px 20px; }
+}
