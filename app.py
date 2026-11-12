@@ -7,16 +7,21 @@ from typing import Annotated
 import faiss
 import numpy as np
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from groq import Groq
 from pydantic import BaseModel, Field
 from sentence_transformers import SentenceTransformer
 
 
-DATA_FILE = Path(__file__).parent / "data" / "pharma_data.csv"
+PROJECT_DIR = Path(__file__).parent
+DATA_FILE = PROJECT_DIR / "data" / "pharma_data.csv"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 DEFAULT_GROQ_MODEL = "openai/gpt-oss-120b"
+templates = Jinja2Templates(directory=PROJECT_DIR / "frontend" / "templates")
 
 
 def load_documents(path: Path) -> list[str]:
@@ -57,6 +62,11 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Simple Pharma RAG", lifespan=lifespan)
+app.mount(
+    "/static",
+    StaticFiles(directory=PROJECT_DIR / "frontend" / "static"),
+    name="static",
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
@@ -74,13 +84,7 @@ class QuestionResponse(BaseModel):
     sources: list[str]
 
 
-@app.get("/api/health")
-def health() -> dict[str, str]:
-    return {"status": "ok"}
-
-
-@app.post("/api/ask", response_model=QuestionResponse)
-def ask_question(request: QuestionRequest) -> QuestionResponse:
+def generate_answer(question: str) -> QuestionResponse:
     api_key = app.state.groq_api_key
     if not api_key:
         raise HTTPException(
@@ -88,7 +92,7 @@ def ask_question(request: QuestionRequest) -> QuestionResponse:
             detail="GROQ_API_KEY is missing. Add it to the project .env file and restart.",
         )
 
-    question = request.question.strip()
+    question = question.strip()
     if not question:
         raise HTTPException(status_code=422, detail="Question cannot be blank.")
 
@@ -127,3 +131,52 @@ def ask_question(request: QuestionRequest) -> QuestionResponse:
     )
     answer = response.choices[0].message.content
     return QuestionResponse(answer=answer or "", sources=sources)
+
+
+@app.get("/", response_class=HTMLResponse)
+def home(request: Request) -> HTMLResponse:
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={"question": "", "answer": None, "sources": [], "error": None},
+    )
+
+
+@app.post("/ask", response_class=HTMLResponse)
+def ask_form(
+    request: Request,
+    question: Annotated[str, Form(max_length=2000)],
+) -> HTMLResponse:
+    answer = None
+    sources: list[str] = []
+    error = None
+    status_code = 200
+    try:
+        result = generate_answer(question)
+        answer = result.answer
+        sources = result.sources
+    except HTTPException as exception:
+        error = exception.detail
+        status_code = exception.status_code
+
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={
+            "question": question,
+            "answer": answer,
+            "sources": sources,
+            "error": error,
+        },
+        status_code=status_code,
+    )
+
+
+@app.get("/api/health")
+def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@app.post("/api/ask", response_model=QuestionResponse)
+def ask_question(request: QuestionRequest) -> QuestionResponse:
+    return generate_answer(request.question)
