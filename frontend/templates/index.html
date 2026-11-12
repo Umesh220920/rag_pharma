@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f8f6" />
+    <title>Pharma RAG Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Pharma RAG home">
+          <span class="brand-mark" aria-hidden="true">+</span>
+          <span>Pharma<span class="brand-light">RAG</span></span>
+        </a>
+        <span class="topbar-note"><span class="status-dot"></span> Reference assistant</span>
+      </header>
+
+      <section class="workspace">
+        <div class="intro">
+          <div class="eyebrow"><span></span> YOUR PHARMA KNOWLEDGE BASE</div>
+          <h1>Answers, grounded<br />in your <em>data.</em></h1>
+          <p>Ask a question about the reference material. Answers are generated from the most relevant records.</p>
+        </div>
+
+        <section class="chat-card" aria-label="Pharma RAG chat">
+          <div class="chat-heading">
+            <div class="chat-icon" aria-hidden="true">✳</div>
+            <div>
+              <strong>Knowledge assistant</strong>
+              <span>Pharma reference · FAISS search</span>
+            </div>
+            <span class="online-label"><span class="status-dot"></span> ONLINE</span>
+          </div>
+
+          <div class="conversation" aria-live="polite">
+            {% if question or answer is not none or error %}
+              <div class="messages">
+                {% if question %}
+                  <article class="message user">
+                    <span class="message-label">YOU</span>
+                    <p>{{ question }}</p>
+                  </article>
+                {% endif %}
+                {% if answer is not none %}
+                  <article class="message assistant">
+                    <span class="message-label">ASSISTANT</span>
+                    <p>{{ answer }}</p>
+                    {% if sources %}
+                      <details class="sources">
+                        <summary>{{ sources|length }} reference sources</summary>
+                        <ul>
+                          {% for source in sources %}
+                            <li>{{ source }}</li>
+                          {% endfor %}
+                        </ul>
+                      </details>
+                    {% endif %}
+                  </article>
+                {% elif error %}
+                  <article class="message assistant">
+                    <span class="message-label">ASSISTANT</span>
+                    <p class="error-text">{{ error }}</p>
+                  </article>
+                {% endif %}
+              </div>
+            {% else %}
+              <div class="welcome">
+                <div class="welcome-symbol" aria-hidden="true">✳</div>
+                <h2>What would you like to know?</h2>
+                <p>Ask a question or try one of these examples.</p>
+                <div class="suggestions">
+                  {% for suggestion in [
+                    "What is pharmacovigilance?",
+                    "How does quality control work?",
+                    "What records help with product traceability?"
+                  ] %}
+                    <form action="/ask" method="post">
+                      <input type="hidden" name="question" value="{{ suggestion }}" />
+                      <button class="suggestion" type="submit">
+                        {{ suggestion }}<span aria-hidden="true">↗</span>
+                      </button>
+                    </form>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          <form class="composer" action="/ask" method="post">
+            <label class="sr-only" for="question">Ask a question</label>
+            <input
+              id="question"
+              name="question"
+              value="{{ question }}"
+              placeholder="Ask a question about pharma data…"
+              maxlength="2000"
+              required
+            />
+            <button type="submit" aria-label="Send question"><span aria-hidden="true">↑</span></button>
+          </form>
+          <p class="disclaimer">For reference only. Not medical advice or a substitute for professional judgment.</p>
+        </section>
+      </section>
+      <footer><span>POWERED BY FAISS + GROQ</span><span>LOCAL DEMO</span></footer>
+    </main>
+  </body>
+</html>

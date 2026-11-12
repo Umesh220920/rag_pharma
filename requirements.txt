@@ -1,7 +1,9 @@
 faiss-cpu
 fastapi
 groq
+jinja2
 numpy
 python-dotenv
+python-multipart
 sentence-transformers
 uvicorn[standard]

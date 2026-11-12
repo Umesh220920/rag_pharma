@@ -43,7 +43,8 @@ h1 em { color: #66836f; font-style: normal; }
 .welcome > p { margin: 0; color: #8a948d; font-size: 12px; }
 .suggestions { max-width: 440px; display: grid; gap: 8px; margin: 25px auto 0; text-align: left; }
 .suggestion { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 13px; border: 1px solid #e9eee9; border-radius: 8px; color: #58675d; background: white; cursor: pointer; font-size: 12px; transition: border-color .15s, background .15s; }
-.suggestion:hover:not(:disabled) { border-color: #b8cdbb; background: #fafcf9; }
+.suggestion:hover { border-color: #b8cdbb; background: #fafcf9; }
+.suggestions form { margin: 0; }
 .suggestion span { color: #91a495; }
 .messages { display: grid; gap: 20px; padding: 24px; }
 .message { max-width: 90%; }

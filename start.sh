@@ -16,24 +16,4 @@ if ! "$PYTHON_BIN" -c "import uvicorn" >/dev/null 2>&1; then
   exit 1
 fi
 
-if ! command -v npm >/dev/null 2>&1; then
-  echo "npm is required. Install Node.js, then run this script again." >&2
-  exit 1
-fi
-
-if [[ ! -d "$ROOT_DIR/frontend/node_modules" ]]; then
-  echo "Frontend dependencies are missing. Run 'cd frontend && npm install' first." >&2
-  exit 1
-fi
-
-"$PYTHON_BIN" -m uvicorn app:app --app-dir "$ROOT_DIR" --host 0.0.0.0 --port 8000 &
-API_PID=$!
-(cd "$ROOT_DIR/frontend" && exec npm run dev -- --host 0.0.0.0) &
-FRONTEND_PID=$!
-
-cleanup() {
-  kill "$API_PID" "$FRONTEND_PID" 2>/dev/null || true
-}
-trap cleanup EXIT INT TERM
-
-wait -n "$API_PID" "$FRONTEND_PID"
+exec "$PYTHON_BIN" -m uvicorn app:app --app-dir "$ROOT_DIR" --host 0.0.0.0 --port 8000
